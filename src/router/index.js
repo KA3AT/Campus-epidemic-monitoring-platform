@@ -5,7 +5,6 @@ import management from "@/views/management/management.vue";
 import studentList from "@/views/management/studentList/studentList.vue";
 import classList from "@/views/management/class/classList.vue";
 import excManagement from "@/views/management/excManagement/excManagement.vue";
-import departmentList from "@/views/management/department/departmentList.vue";
 import xxdb from "@/views/management/xxdb/xxdb.vue";
 import sjfx from "@/views/management/sjfx/sjfx.vue";
 import cxsj from "@/views/management/cxsj/cxsj.vue";
@@ -37,11 +36,6 @@ const routes = [
         path: 'excManagement',
         name: 'excManagement',
         component: excManagement
-      },
-      {
-        path: 'department',
-        name: 'department',
-        component: departmentList
       },
       {
         path: 'xxdb',

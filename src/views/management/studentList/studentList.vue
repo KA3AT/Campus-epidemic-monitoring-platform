@@ -39,6 +39,10 @@
             label="年龄">
         </el-table-column>
         <el-table-column
+            prop="sex"
+            label="性别">
+        </el-table-column>
+        <el-table-column
             prop="province"
             label="省">
         </el-table-column>
@@ -47,14 +51,18 @@
             label="市">
         </el-table-column>
         <el-table-column
+            prop="dorm"
+            label="宿舍">
+        </el-table-column>
+        <el-table-column
             fixed="right"
             label="操作"
             width="120">
           <template slot-scope="scope">
             <el-button
-              @click="update(scope.row)"
-              type="text"
-              size="small">
+                @click="update(scope.row)"
+                type="text"
+                size="small">
               编辑
             </el-button>
             <el-button
@@ -68,12 +76,20 @@
       </el-table>
     </div>
     <div class="foot">
-      <pagination/>
+      <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="pageNum"
+          :page-sizes="[10, 20, 50, 100]"
+          :page-size="pageSize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="total">
+      </el-pagination>
     </div>
 
     <!--  添加学生信息  -->
     <el-dialog
-        :title="formTitle"
+        title="新增学生信息"
         :visible.sync="addVisible">
       <el-form
           ref="addForm"
@@ -90,11 +106,17 @@
         <el-form-item :label-width="formLabelWidth" label="年龄">
           <el-input v-model="addForm.age"></el-input>
         </el-form-item>
+        <el-form-item :label-width="formLabelWidth" label="性别">
+          <el-input v-model="addForm.sex"></el-input>
+        </el-form-item>
         <el-form-item :label-width="formLabelWidth" label="省">
           <el-input v-model="addForm.province"></el-input>
         </el-form-item>
         <el-form-item :label-width="formLabelWidth" label="市">
           <el-input v-model="addForm.city"></el-input>
+        </el-form-item>
+        <el-form-item :label-width="formLabelWidth" label="宿舍">
+          <el-input v-model="addForm.dorm"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -102,91 +124,163 @@
     <el-button type="primary" @click="addSubmit">确 定</el-button>
     </span>
     </el-dialog>
+
+    <!--  编辑学生信息  -->
+    <el-dialog
+        title="编辑学生信息"
+        :visible.sync="editVisible">
+      <el-form
+          ref="editForm"
+          :model="editForm">
+        <el-form-item :label-width="formLabelWidth" label="姓名">
+          <el-input v-model="editForm.name"></el-input>
+        </el-form-item>
+        <el-form-item :label-width="formLabelWidth" label="学号">
+          <el-input v-model="editForm.studentID"></el-input>
+        </el-form-item>
+        <el-form-item :label-width="formLabelWidth" label="班级号">
+          <el-input v-model="editForm.classID"></el-input>
+        </el-form-item>
+        <el-form-item :label-width="formLabelWidth" label="年龄">
+          <el-input v-model="editForm.age"></el-input>
+        </el-form-item>
+        <el-form-item :label-width="formLabelWidth" label="性别">
+          <el-input v-model="editForm.sex"></el-input>
+        </el-form-item>
+        <el-form-item :label-width="formLabelWidth" label="省">
+          <el-input v-model="editForm.province"></el-input>
+        </el-form-item>
+        <el-form-item :label-width="formLabelWidth" label="市">
+          <el-input v-model="editForm.city"></el-input>
+        </el-form-item>
+        <el-form-item :label-width="formLabelWidth" label="宿舍">
+          <el-input v-model="editForm.dorm"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+    <el-button @click="editVisible = false">取 消</el-button>
+    <el-button type="primary" @click="editSubmit">确 定</el-button>
+    </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import Pagination from "@/components/common/pagination.vue";
 
 export default {
   name: "studentList",
-  components: {Pagination},
+  components: {},
   data() {
     return {
       input: '',
       studentList: [],
+      pageNum: 1,
+      pageSize: 10,
+      total: 0,
       addVisible: false,
       editVisible: false,
-      formLabelWidth: '120px',
-      formTitle: '新增学生信息',
+      formLabelWidth: '200px',
       addForm: {
         name: '',
         studentID: '',
         classID: '',
-        age:'',
+        age: '',
+        sex: '',
         province: '',
         city: '',
+        dorm: '',
+      },
+      editForm: {
+        name: '',
+        studentID: '',
+        classID: '',
+        age: '',
+        sex: '',
+        province: '',
+        city: '',
+        dorm: '',
       },
     }
   },
+  created() {
+    this.getStudentList()
+  },
   methods: {
-    getStudentList() {
-      this.$axios.get('/api/student/findAll')
-          .then(resp => {
-            this.studentList = resp.data
-          })
+    getStudentList(pageNum, pageSize) {
+      let url = 'api/student/findAll';
+      this.$axios.get(url, {
+        params: {
+          pageNum: this.pageNum,
+          pageSize: this.pageSize,
+          id: this.input
+        }
+      }).then(resp => {
+        resp.data.list.get
+        this.studentList = resp.data.list;
+        this.total = resp.data.total;
+        console.log(resp.data);
+      });
+    },
+    handleSizeChange(val) {
+      this.pageSize = val;
+      this.getStudentList(this.pageNum, this.pageSize);
+      console.log(`每页 ${val} 条`);
+    },
+    handleCurrentChange(val) {
+      this.pageNum = val;
+      this.getStudentList(this.pageNum, this.pageSize);
+      console.log(`当前页: ${val}`);
     },
     search() {
-
+      this.getStudentList()
     },
     addDialog() {
-      this.formTitle = '新增学生信息'
       this.addVisible = true
       this.addForm = {
         name: '',
         studentID: '',
         classID: '',
-        age:'',
+        age: '',
+        sex: '',
         province: '',
         city: '',
+        dorm: '',
       }
     },
     addSubmit(addForm) {
-      this.$refs['addForm'].validate((valid) => {
-        if (valid) {
-          const url = this.addForm.studentID? '/api/student/update' : '/api/student/save'
-          this.$axios.post(url, this.addForm).then(res => {
-            this.getStudentList()
-            this.addVisible = false
-          })
-        } else {
-          console.log('error submit!!');
-          return false;
-        }
-      });
+      const url = '/api/student/save'
+      this.$axios.post(url, this.addForm).then(res => {
+        this.getStudentList()
+        this.addVisible = false
+      })
     },
-    
     update(row) {
-      this.formTitle = '编辑学生信息'
-      this.addVisible = true
-      this.addForm = row
-
+      this.editVisible = true
+      this.editForm = row
+    },
+    editSubmit(editForm) {
+      let url = 'api/student/update'
+      this.$axios.post(url, this.editForm).then(res => {
+        this.getStudentList()
+        this.editVisible = false
+      })
     },
     deleteHandle(id) {
-      this.$confirm(`确定对[id=${id}]进行[删除]操作?`, '提示', {
+      this.$confirm(`确定对classID：${id}进行[删除]操作?`, '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$axios.delete(`/api/student/${id}`)
-            .then(({data}) => {
-            })
+        this.$axios.get(`/api/student/deleteBystudentID`, {
+          params: {
+            id: id
+          }
+        }).then(({data}) => {
+          this.getStudentList()
         })
-    },
+      })
+    }
   },
-  created() {
-    this.getStudentList()
-  }
 }
 </script>
 

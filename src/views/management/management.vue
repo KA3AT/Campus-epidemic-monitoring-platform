@@ -21,7 +21,6 @@
             <el-menu-item-group>
               <el-menu-item index="/management/student">学生表</el-menu-item>
               <el-menu-item index="/management/class">班级表</el-menu-item>
-              <el-menu-item index="/management/department">院系表</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
           <el-menu-item index="/management/excManagement">异常管理</el-menu-item>
