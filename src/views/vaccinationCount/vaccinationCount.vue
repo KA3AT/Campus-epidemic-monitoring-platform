@@ -47,7 +47,7 @@ export default {
           }
         },
         legend: {
-          data: ['学生人数', '疫苗接种人数'],
+          data: ['在校人数', '疫苗接种人数'],
           textStyle: {
             color: '#B4B4B4'
           },
@@ -108,10 +108,10 @@ export default {
                 )
               }
             },
-            data: this.data.vaccinationCount
+            data: this.data.vaccinumCount
           },
           {
-            name: '学生人数',
+            name: '在校人数',
             type: 'bar',
             barGap: '-100%',
             barWidth: 10,
@@ -129,7 +129,7 @@ export default {
               }
             },
             z: -12,
-            data: this.data.studentCount
+            data: this.data.attendCount
           },
         ]
       }

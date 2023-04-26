@@ -18,6 +18,7 @@
       <el-table
         :data="excData"
         border
+        max-height="390"
         style="width: 100%;height: calc(100vh - 265px)">
         <el-table-column
             prop="studentID"
@@ -66,7 +67,7 @@
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page="pageNum"
-          :page-sizes="[10, 20, 50, 100]"
+          :page-sizes="[25, 50, 100, 200]"
           :page-size="pageSize"
           layout="total, sizes, prev, pager, next, jumper"
           :total="total">
@@ -79,25 +80,37 @@
         :visible.sync="addVisible">
       <el-form
           ref="addForm"
+          :rules="rules"
+          label-position="right"
+          :label-width="formLabelWidth"
           :model="addForm">
-        <el-form-item :label-width="formLabelWidth" label="学号">
-          <el-input style="width: 300px" v-model="addForm.studentID"></el-input>
+        <el-form-item prop="studentID" label="学号">
+          <el-input class="form-input" v-model="addForm.studentID"></el-input>
         </el-form-item>
-        <el-form-item :label-width="formLabelWidth" label="体温">
-          <el-input style="width: 300px" v-model="addForm.temperature"></el-input>
+        <el-form-item prop="temperature" label="体温">
+          <el-input class="form-input" v-model="addForm.temperature"></el-input>
         </el-form-item>
-        <el-form-item :label-width="formLabelWidth" label="确诊">
-          <el-input style="width: 300px" v-model="addForm.infected"></el-input>
+        <el-form-item label="确诊" prop="infected">
+          <el-radio-group class="form-input" v-model="addForm.infected">
+            <el-radio label="是"></el-radio>
+            <el-radio label="否"></el-radio>
+          </el-radio-group>
         </el-form-item>
-        <el-form-item :label-width="formLabelWidth" label="密接及次密接">
-          <el-input style="width: 300px" v-model="addForm.touch"></el-input>
+        <el-form-item label="密接及次密接" prop="infected">
+          <el-radio-group class="form-input" v-model="addForm.touch">
+            <el-radio label="是"></el-radio>
+            <el-radio label="否"></el-radio>
+          </el-radio-group>
         </el-form-item>
-        <el-form-item :label-width="formLabelWidth" label="隔离">
-          <el-input style="width: 300px" v-model="addForm.quarantine"></el-input>
+        <el-form-item label="隔离" prop="quarantine">
+          <el-radio-group class="form-input" v-model="addForm.quarantine">
+            <el-radio label="是"></el-radio>
+            <el-radio label="否"></el-radio>
+          </el-radio-group>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-    <el-button @click="addVisible = false">取 消</el-button>
+    <el-button @click="closeForm('addForm')">取 消</el-button>
     <el-button type="primary" @click="addSubmit">确 定</el-button>
     </span>
     </el-dialog>
@@ -108,25 +121,37 @@
         :visible.sync="editVisible">
       <el-form
           ref="editForm"
+          :rules="rules"
+          label-position="right"
+          :label-width="formLabelWidth"
           :model="editForm">
-        <el-form-item :label-width="formLabelWidth" label="学号">
-          <el-input style="width: 300px" v-model="editForm.studentID"></el-input>
+        <el-form-item prop="studentID" label="学号">
+          <el-input class="form-input" v-model="editForm.studentID"></el-input>
         </el-form-item>
-        <el-form-item :label-width="formLabelWidth" label="体温">
-          <el-input style="width: 300px" v-model="editForm.temperature"></el-input>
+        <el-form-item prop="temperature" label="体温">
+          <el-input class="form-input" v-model="editForm.temperature"></el-input>
         </el-form-item>
-        <el-form-item :label-width="formLabelWidth" label="确诊">
-          <el-input style="width: 300px" v-model="editForm.infected"></el-input>
+        <el-form-item label="确诊" prop="infected">
+          <el-radio-group class="form-input" v-model="editForm.infected">
+            <el-radio label="是"></el-radio>
+            <el-radio label="否"></el-radio>
+          </el-radio-group>
         </el-form-item>
-        <el-form-item :label-width="formLabelWidth" label="密接及次密接">
-          <el-input style="width: 300px" v-model="editForm.touch"></el-input>
+        <el-form-item label="密接及次密接" prop="infected">
+          <el-radio-group class="form-input" v-model="editForm.touch">
+            <el-radio label="是"></el-radio>
+            <el-radio label="否"></el-radio>
+          </el-radio-group>
         </el-form-item>
-        <el-form-item :label-width="formLabelWidth" label="隔离">
-          <el-input style="width: 300px" v-model="editForm.quarantine"></el-input>
+        <el-form-item label="隔离" prop="quarantine">
+          <el-radio-group class="form-input" v-model="editForm.quarantine">
+            <el-radio label="是"></el-radio>
+            <el-radio label="否"></el-radio>
+          </el-radio-group>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-    <el-button @click="editVisible = false">取 消</el-button>
+    <el-button @click="closeForm('editForm')">取 消</el-button>
     <el-button type="primary" @click="editSubmit">确 定</el-button>
     </span>
     </el-dialog>
@@ -143,7 +168,7 @@ export default {
       input: '',
       excData:[],
       pageNum: 1,
-      pageSize: 10,
+      pageSize: 50,
       total: 0,
       addVisible: false,
       editVisible: false,
@@ -161,6 +186,21 @@ export default {
         infected: '',
         touch: '',
         quarantine: '',
+      },
+      rules: {
+        studentID:[
+          {required: true, message: '请输入学号', trigger: 'blur'},],
+        temperature: [
+          {required: true, message: '请输入体温', trigger: 'blur'},],
+        infected: [
+          {required: true, message: '请选择是否确诊', trigger: 'change'}
+        ],
+        touch: [
+          {required: true, message: '请选择是否密接或次密接', trigger: 'change'}
+        ],
+        quarantine: [
+          {required: true, message: '请选择是否隔离', trigger: 'change'}
+        ]
       }
     }
   },
@@ -205,6 +245,7 @@ export default {
         touch: '',
         quarantine: '',
       }
+      this.$refs.addForm.resetFields();
     },
     addSubmit(addForm) {
       let url = 'api/abnormal/insertAbnormal'
@@ -216,6 +257,7 @@ export default {
     update(row) {
       this.editVisible = true
       this.editForm = row
+      this.$refs.editForm.resetFields();
     },
     editSubmit(editForm) {
       let url = 'api/abnormal/UpdateById'
@@ -239,6 +281,11 @@ export default {
         })
       })
     },
+    closeForm(formName) {
+      this.addVisible = false
+      this.editVisible = false
+      this.$refs[formName].resetFields();
+    }
   }
 }
 </script>
@@ -274,5 +321,10 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.form-input {
+  width: 300px;
+  margin-right: 200px;
 }
 </style>

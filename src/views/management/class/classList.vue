@@ -18,6 +18,7 @@
       <el-table
           :data="classList"
           border
+          max-height="390"
           style="width: 100%">
         <el-table-column
             prop="classID"
@@ -71,7 +72,7 @@
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page="pageNum"
-          :page-sizes="[10, 20, 50, 100]"
+          :page-sizes="[25, 50, 100, 200]"
           :page-size="pageSize"
           layout="total, sizes, prev, pager, next, jumper"
           :total="total">
@@ -84,28 +85,31 @@
         :visible.sync="addVisible">
       <el-form
           ref="addForm"
+          :rules="rules"
+          label-position="right"
+          :label-width="formLabelWidth"
           :model="addForm">
-        <el-form-item :label-width="formLabelWidth" label="班级号">
-          <el-input style="width: 300px" v-model="addForm.classID"></el-input>
+        <el-form-item prop="classID" label="班级号">
+          <el-input class="form-input" v-model="addForm.classID"></el-input>
         </el-form-item>
-        <el-form-item :label-width="formLabelWidth" label="班级">
-          <el-input style="width: 300px" v-model="addForm.className"></el-input>
+        <el-form-item prop="className" label="班级">
+          <el-input class="form-input" v-model="addForm.className"></el-input>
         </el-form-item>
-        <el-form-item :label-width="formLabelWidth" label="辅导员编号">
-          <el-input style="width: 300px" v-model="addForm.instructorID"></el-input>
+        <el-form-item prop="instructorID" label="辅导员编号">
+          <el-input class="form-input" v-model="addForm.instructorID"></el-input>
         </el-form-item>
-        <el-form-item :label-width="formLabelWidth" label="辅导员">
-          <el-input style="width: 300px" v-model="addForm.instructor"></el-input>
+        <el-form-item prop="instructor" label="辅导员">
+          <el-input class="form-input" v-model="addForm.instructor"></el-input>
         </el-form-item>
-        <el-form-item :label-width="formLabelWidth" label="入学人数">
-          <el-input style="width: 300px" v-model="addForm.a"></el-input>
+        <el-form-item label="入学人数">
+          <el-input class="form-input" v-model="addForm.a"></el-input>
         </el-form-item>
-        <el-form-item :label-width="formLabelWidth" label="在校人数">
-          <el-input style="width: 300px" v-model="addForm.b"></el-input>
+        <el-form-item label="在校人数">
+          <el-input class="form-input" v-model="addForm.b"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-    <el-button @click="addVisible = false">取 消</el-button>
+    <el-button @click="closeForm('addForm')">取 消</el-button>
     <el-button type="primary" @click="addSubmit">确 定</el-button>
     </span>
     </el-dialog>
@@ -116,28 +120,31 @@
         :visible.sync="editVisible">
       <el-form
           ref="editForm"
+          :rules="rules"
+          label-position="right"
+          :label-width="formLabelWidth"
           :model="editForm">
-        <el-form-item :label-width="formLabelWidth" label="班级号">
-          <el-input style="width: 300px" v-model="editForm.classID"></el-input>
+        <el-form-item prop="classID" label="班级号">
+          <el-input class="form-input" v-model="editForm.classID"></el-input>
         </el-form-item>
-        <el-form-item :label-width="formLabelWidth" label="班级">
-          <el-input style="width: 300px" v-model="editForm.className"></el-input>
+        <el-form-item prop="className" label="班级">
+          <el-input class="form-input" v-model="editForm.className"></el-input>
         </el-form-item>
-        <el-form-item :label-width="formLabelWidth" label="辅导员编号">
-          <el-input style="width: 300px" v-model="editForm.instructorID"></el-input>
+        <el-form-item prop="instructorID" label="辅导员编号">
+          <el-input class="form-input" v-model="editForm.instructorID"></el-input>
         </el-form-item>
-        <el-form-item :label-width="formLabelWidth" label="辅导员">
-          <el-input style="width: 300px" v-model="editForm.instructor"></el-input>
+        <el-form-item prop="instructor" label="辅导员">
+          <el-input class="form-input" v-model="editForm.instructor"></el-input>
         </el-form-item>
-        <el-form-item :label-width="formLabelWidth" label="入学人数">
-          <el-input style="width: 300px" v-model="editForm.a"></el-input>
+        <el-form-item label="入学人数">
+          <el-input class="form-input" v-model="editForm.a"></el-input>
         </el-form-item>
-        <el-form-item :label-width="formLabelWidth" label="在校人数">
-          <el-input style="width: 300px" v-model="editForm.b"></el-input>
+        <el-form-item label="在校人数">
+          <el-input class="form-input" v-model="editForm.b"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-    <el-button @click="editVisible = false">取 消</el-button>
+    <el-button @click="closeForm('editForm')">取 消</el-button>
     <el-button type="primary" @click="editSubmit">确 定</el-button>
     </span>
     </el-dialog>
@@ -154,7 +161,7 @@ export default {
       input: '',
       classList: [],
       pageNum: 1,
-      pageSize: 10,
+      pageSize: 50,
       total: 0,
       addVisible: false,
       editVisible: false,
@@ -174,6 +181,12 @@ export default {
         instructor: '',
         a: '',
         b: '',
+      },
+      rules: {
+        classID: [{required: true, message: '请输入班级号', trigger: 'blur'},],
+        className: [{ required: true, message: '请输入班级名', trigger: 'blur' }],
+        instructorID: [{required: true, message: '请输入辅导员编号', trigger: 'blur'},],
+        instructor: [{ required: true, message: '请输入辅导员姓名', trigger: 'blur' }],
       }
     }
   },
@@ -219,6 +232,7 @@ export default {
         a: '',
         b: '',
       }
+      this.$refs.addForm.resetFields();
     },
     addSubmit(addForm) {
       let url = 'api/class/insertClass'
@@ -230,6 +244,7 @@ export default {
     update(row) {
       this.editVisible = true
       this.editForm = row
+      this.$refs.editForm.resetFields();
     },
     editSubmit(editForm) {
       let url = 'api/class/UpdateById'
@@ -253,6 +268,11 @@ export default {
         })
       })
     },
+    closeForm(formName) {
+      this.addVisible = false
+      this.editVisible = false
+      this.$refs[formName].resetFields();
+    }
   }
 }
 </script>
@@ -288,4 +308,10 @@ export default {
   justify-content: center;
   align-items: center;
 }
+
+.form-input {
+  width: 300px;
+  margin-right: 200px;
+}
+
 </style>

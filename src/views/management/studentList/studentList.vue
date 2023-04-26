@@ -55,6 +55,18 @@
             label="宿舍">
         </el-table-column>
         <el-table-column
+            prop="attend"
+            label="在校">
+        </el-table-column>
+        <el-table-column
+            prop="vaccinum"
+            label="疫苗接种">
+        </el-table-column>
+        <el-table-column
+            prop="nuclein"
+            label="核酸检测">
+        </el-table-column>
+        <el-table-column
             fixed="right"
             label="操作"
             width="120">
@@ -80,7 +92,7 @@
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page="pageNum"
-          :page-sizes="[10, 20, 50, 100]"
+          :page-sizes="[25, 50, 100, 200]"
           :page-size="pageSize"
           layout="total, sizes, prev, pager, next, jumper"
           :total="total">
@@ -93,34 +105,62 @@
         :visible.sync="addVisible">
       <el-form
           ref="addForm"
+          :rules="rules"
+          label-position="right"
+          :label-width="formLabelWidth"
           :model="addForm">
-        <el-form-item :label-width="formLabelWidth" label="姓名">
-          <el-input v-model="addForm.name"></el-input>
+        <el-form-item prop="name" label="姓名">
+          <el-input class="form-input" v-model="addForm.name"></el-input>
         </el-form-item>
-        <el-form-item :label-width="formLabelWidth" label="学号">
-          <el-input v-model="addForm.studentID"></el-input>
+        <el-form-item prop="studentID" label="学号">
+          <el-input class="form-input" v-model="addForm.studentID"></el-input>
         </el-form-item>
-        <el-form-item :label-width="formLabelWidth" label="班级号">
-          <el-input v-model="addForm.classID"></el-input>
+        <el-form-item prop="classID" label="班级号">
+          <el-input class="form-input" v-model="addForm.classID"></el-input>
         </el-form-item>
-        <el-form-item :label-width="formLabelWidth" label="年龄">
-          <el-input v-model="addForm.age"></el-input>
+        <el-form-item prop="age" label="年龄">
+          <el-input class="form-input" v-model="addForm.age"></el-input>
         </el-form-item>
-        <el-form-item :label-width="formLabelWidth" label="性别">
-          <el-input v-model="addForm.sex"></el-input>
+        <el-form-item label="性别" prop="sex">
+          <el-radio-group class="form-input" v-model="addForm.sex">
+            <el-radio label="男"></el-radio>
+            <el-radio label="女"></el-radio>
+          </el-radio-group>
         </el-form-item>
-        <el-form-item :label-width="formLabelWidth" label="省">
-          <el-input v-model="addForm.province"></el-input>
+        <el-form-item label="地区" prop="country">
+          <el-cascader
+              size="large"
+              class="form-input"
+              :options="options"
+              placeholder="请选择地区"
+              v-model="selectedOptions"
+              @change="handleChange">
+          </el-cascader>
         </el-form-item>
-        <el-form-item :label-width="formLabelWidth" label="市">
-          <el-input v-model="addForm.city"></el-input>
+        <el-form-item prop="dorm" label="宿舍">
+          <el-input class="form-input" v-model="addForm.dorm"></el-input>
         </el-form-item>
-        <el-form-item :label-width="formLabelWidth" label="宿舍">
-          <el-input v-model="addForm.dorm"></el-input>
+        <el-form-item label="在校" prop="attend">
+          <el-radio-group class="form-input" v-model="addForm.attend">
+            <el-radio label="是"></el-radio>
+            <el-radio label="否"></el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="疫苗接种" prop="vaccinum">
+          <el-radio-group class="form-input" v-model="addForm.vaccinum">
+            <el-radio label="是"></el-radio>
+            <el-radio label="否"></el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="核酸检测" prop="nuclein">
+          <el-radio-group class="form-input" v-model="addForm.nuclein">
+            <el-radio label="是"></el-radio>
+            <el-radio label="否"></el-radio>
+          </el-radio-group>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-    <el-button @click="addVisible = false">取 消</el-button>
+    <el-button @click="closeForm('addForm')">取 消</el-button>
     <el-button type="primary" @click="addSubmit">确 定</el-button>
     </span>
     </el-dialog>
@@ -131,34 +171,69 @@
         :visible.sync="editVisible">
       <el-form
           ref="editForm"
+          :rules="rules"
+          label-position="right"
+          :label-width="formLabelWidth"
           :model="editForm">
-        <el-form-item :label-width="formLabelWidth" label="姓名">
-          <el-input v-model="editForm.name"></el-input>
+        <el-form-item prop="name" label="姓名">
+          <el-input class="form-input" v-model="editForm.name"></el-input>
         </el-form-item>
-        <el-form-item :label-width="formLabelWidth" label="学号">
-          <el-input v-model="editForm.studentID"></el-input>
+        <el-form-item prop="studentID" label="学号">
+          <el-input class="form-input" v-model="editForm.studentID"></el-input>
         </el-form-item>
-        <el-form-item :label-width="formLabelWidth" label="班级号">
-          <el-input v-model="editForm.classID"></el-input>
+        <el-form-item prop="classID" label="班级号">
+          <el-input class="form-input" v-model="editForm.classID"></el-input>
         </el-form-item>
-        <el-form-item :label-width="formLabelWidth" label="年龄">
-          <el-input v-model="editForm.age"></el-input>
+        <el-form-item prop="age" label="年龄">
+          <el-input class="form-input" v-model="editForm.age"></el-input>
         </el-form-item>
-        <el-form-item :label-width="formLabelWidth" label="性别">
-          <el-input v-model="editForm.sex"></el-input>
+        <el-form-item label="性别" prop="sex">
+          <el-radio-group class="form-input" v-model="editForm.sex">
+            <el-radio label="男"></el-radio>
+            <el-radio label="女"></el-radio>
+          </el-radio-group>
         </el-form-item>
-        <el-form-item :label-width="formLabelWidth" label="省">
-          <el-input v-model="editForm.province"></el-input>
+        <el-form-item label="地区">
+          <el-cascader
+              size="large"
+              class="form-input"
+              :options="options"
+              placeholder="请选择地区"
+              ref="cascaderEdit"
+              v-model="editForm.selectedOptions"
+              @change="handleChange">
+          </el-cascader>
         </el-form-item>
-        <el-form-item :label-width="formLabelWidth" label="市">
-          <el-input v-model="editForm.city"></el-input>
+        <el-form-item label="省">
+          <el-input class="form-input" v-model="editForm.province"></el-input>
         </el-form-item>
-        <el-form-item :label-width="formLabelWidth" label="宿舍">
-          <el-input v-model="editForm.dorm"></el-input>
+        <el-form-item label="市">
+          <el-input class="form-input" v-model="editForm.city"></el-input>
+        </el-form-item>
+        <el-form-item prop="dorm" label="宿舍">
+          <el-input class="form-input" v-model="editForm.dorm"></el-input>
+        </el-form-item>
+        <el-form-item label="在校" prop="attend">
+          <el-radio-group class="form-input" v-model="editForm.attend">
+            <el-radio label="是"></el-radio>
+            <el-radio label="否"></el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="疫苗接种" prop="vaccinum">
+          <el-radio-group class="form-input" v-model="editForm.vaccinum">
+            <el-radio label="是"></el-radio>
+            <el-radio label="否"></el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="核酸检测" prop="nuclein">
+          <el-radio-group class="form-input" v-model="editForm.nuclein">
+            <el-radio label="是"></el-radio>
+            <el-radio label="否"></el-radio>
+          </el-radio-group>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-    <el-button @click="editVisible = false">取 消</el-button>
+    <el-button @click="closeForm('editForm')">取 消</el-button>
     <el-button type="primary" @click="editSubmit">确 定</el-button>
     </span>
     </el-dialog>
@@ -166,6 +241,7 @@
 </template>
 
 <script>
+import { provinceAndCityData, CodeToText, TextToCode } from "element-china-area-data/dist/app";
 
 export default {
   name: "studentList",
@@ -175,11 +251,13 @@ export default {
       input: '',
       studentList: [],
       pageNum: 1,
-      pageSize: 10,
+      pageSize: 50,
       total: 0,
       addVisible: false,
       editVisible: false,
       formLabelWidth: '200px',
+      options: provinceAndCityData,
+      selectedOptions: [],
       addForm: {
         name: '',
         studentID: '',
@@ -189,8 +267,12 @@ export default {
         province: '',
         city: '',
         dorm: '',
+        attend: '',
+        vaccinum: '',
+        nuclein: '',
       },
       editForm: {
+        selectedOptions: [],
         name: '',
         studentID: '',
         classID: '',
@@ -199,6 +281,21 @@ export default {
         province: '',
         city: '',
         dorm: '',
+        attend: '',
+        vaccinum: '',
+        nuclein: '',
+      },
+      rules: {
+        name: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
+        studentID: [{required: true, message: '请输入学号', trigger: 'blur'},],
+        classID: [{required: true, message: '请输入班级号', trigger: 'blur'},],
+        age: [{ required: true, message: '年龄不能为空'},],
+        sex: [{required: true, message: '请选择性别', trigger: 'change'}],
+        selectedOptions: [{ required: true, message: '请选择省市', trigger: 'change' }],
+        dorm: [{ required: true, message: '宿舍号不能为空'},],
+        attend: [{required: true, message: '请选择是否在校', trigger: 'change'}],
+        vaccinum: [{required: true, message: '请选择是否接种疫苗', trigger: 'change'}],
+        nuclein: [{required: true, message: '请选择是否核酸检测', trigger: 'change'}],
       },
     }
   },
@@ -244,8 +341,11 @@ export default {
         sex: '',
         province: '',
         city: '',
+        country: '',
         dorm: '',
       }
+      this.$refs.addForm.resetFields();
+
     },
     addSubmit(addForm) {
       const url = '/api/student/save'
@@ -257,6 +357,10 @@ export default {
     update(row) {
       this.editVisible = true
       this.editForm = row
+      let provinceCode = TextToCode[this.editForm.province]
+      let cityCode = TextToCode[this.editForm.city]
+      this.editForm.selectedOptions = [provinceCode,cityCode]
+      this.$refs.editForm.resetFields();
     },
     editSubmit(editForm) {
       let url = 'api/student/update'
@@ -266,7 +370,7 @@ export default {
       })
     },
     deleteHandle(id) {
-      this.$confirm(`确定对classID：${id}进行[删除]操作?`, '提示', {
+      this.$confirm(`确定对studentID：${id}进行[删除]操作?`, '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -279,7 +383,21 @@ export default {
           this.getStudentList()
         })
       })
-    }
+    },
+    closeForm(formName) {
+      this.addVisible = false
+      this.editVisible = false
+      this.$refs[formName].resetFields();
+    },
+    //省市区级联选择器选择后更新用户前端
+    handleChange (value) {
+      this.addForm.province = ''
+      this.addForm.city = ''
+      for (let i = 0; i < this.selectedOptions.length; i++) {
+        if (i === 0) { this.addForm.province = CodeToText[this.selectedOptions[i]] }
+        if (i === 1) { this.addForm.city = CodeToText[this.selectedOptions[i]] }
+      }
+    },
   },
 }
 </script>
@@ -315,5 +433,10 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.form-input {
+  width: 300px;
+  margin-right: 200px;
 }
 </style>

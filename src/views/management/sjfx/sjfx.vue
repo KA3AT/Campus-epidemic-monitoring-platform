@@ -3,10 +3,7 @@
     <div
         ref="sjfx"
         class="sjfx"
-        style="width: 70%; height: 100%"/>
-    <div class="table">
-      <dv-capsule-chart :config="timeData" style="width:100%;height:100%" />
-    </div>
+        style="width: 100%; height: 100%"/>
   </div>
 </template>
 
@@ -76,13 +73,13 @@ export default {
             name: '入校',
             type: 'line',
             stack: 'Total',
-            data: [120, 132, 101, 134, 90, 230, 210]
+            data: [0, 0, 0, 0, 0, 0, 2, 0, 2, 1, 0, 0]
           },
           {
             name: '出校',
             type: 'line',
             stack: 'Total',
-            data: [220, 182, 191, 234, 290, 330, 310]
+            data: [0, 0, 0, 0, 0, 1, 2, 2, 0, 0, 0, 0]
           },
         ]
       };

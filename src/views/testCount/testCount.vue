@@ -108,7 +108,7 @@ export default {
                 )
               }
             },
-            data: this.data.testCount
+            data: this.data.nucleinCount
           },
           {
             name: '在校人数',
@@ -129,7 +129,7 @@ export default {
               }
             },
             z: -12,
-            data: this.data.studentCount
+            data: this.data.attendCount
           },
         ]
       }

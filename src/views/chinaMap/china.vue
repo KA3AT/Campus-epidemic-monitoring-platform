@@ -3,6 +3,7 @@
     <el-button type="text" size="large" class="back" @click="back" v-if="deepTree.length > 1">返回</el-button>
     <div class="echarts">
       <div id="map"></div>
+      <el-button @click="backData">backdata</el-button>
     </div>
   </div>
 </template>
@@ -70,6 +71,9 @@ export default {
       },
       tooltipAutoplay: null, // 提示框自动播放
       tooltipAutoplayIndex: 0, // 提示框自动播放index
+      adList: [
+        {adcode:'140000', value: 1234 }
+      ]
     }
   },
   beforeDestroy() {
@@ -106,7 +110,6 @@ export default {
     // 初次加载绘制地图
     initEcharts() {
       //地图容器
-      // this.$echarts.dispose(document.getElementById('map'))
       this.chart = this.$echarts.init(document.getElementById('map'));
 
 
@@ -178,8 +181,8 @@ export default {
       for (var i = 0; i < res.features.length; i++) {
         var obj = {
           ...res.features[i].properties,
-          value: this._mathRandom1000(),
-          valueData: this._mathRandom1000(),
+          value: 100,
+          valueData: 0,
         };
         mapDataList.unshift(obj)
         mapNameList.unshift(res.features[i].properties.name)
@@ -306,6 +309,9 @@ export default {
         this.$emit('update:mapCodeList', mapCodeList)
         this.renderMap(areaName, this.mapDataList);
       }
+    },
+    backData() {
+      console.log(this.mapDataList);
     }
   }
 }

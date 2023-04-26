@@ -138,7 +138,7 @@ export default {
               borderWidth: 2
             }
           },
-          data: this.data.contactCount
+          data: this.data.knitCount
         }, {
           name: '确诊',
           type: 'line',
@@ -181,7 +181,7 @@ export default {
               borderWidth: 2
             }
           },
-          data: this.data.diagnosisCount
+          data: this.data.ConfirmedCount
         },
           {
             name: '隔离',
@@ -225,7 +225,7 @@ export default {
                 borderWidth: 2
               }
             },
-            data: this.data.observationCount
+            data: this.data.abnormalCount
           }]
       }
       chart.setOption(option)

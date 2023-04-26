@@ -14,7 +14,7 @@ export default {
       type: Object,
       default() {
         return {
-          temperatureList: [],
+          AbnormalCount: [],
           dataList: []
         }
       }
@@ -142,7 +142,7 @@ export default {
               borderWidth: 2
             }
           },
-          data: this.data.temperatureList
+          data: this.data.AbnormalCount
         },
         ]
       }
